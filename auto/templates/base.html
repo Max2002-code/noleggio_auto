@@ -5,24 +5,118 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Noleggio Auto</title>
+    <title>{% block title %} Gestionale Noleggio Auto {% endblock %}</title>
 
+    <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+
+    <!-- Icone Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: #f4f6f9;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      .navbar {
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+      }
+
+      .navbar-brand {
+        font-size: 1.4rem;
+        font-weight: 700;
+      }
+
+      .main-container {
+        margin-top: 40px;
+        margin-bottom: 50px;
+      }
+
+      .card {
+        border: none;
+        border-radius: 15px;
+      }
+
+      .btn {
+        border-radius: 10px;
+      }
+
+      footer {
+        background: #212529;
+        color: white;
+        padding: 20px;
+        margin-top: 50px;
+      }
+    </style>
   </head>
 
-  <body class="bg-light">
-    <nav class="navbar navbar-dark bg-dark">
-      <div class="container">
-        <a class="navbar-brand" href="/"> 🚗 Noleggio Auto </a>
+  <body>
+    <!-- NAVBAR -->
 
-        <a href="/calendario/" class="btn btn-dark"> Calendario </a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <i class="bi bi-car-front-fill"></i>
+
+          Noleggio Auto
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#menu"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="bi bi-grid"></i>
+                Catalogo
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/calendario/">
+                <i class="bi bi-calendar3"></i>
+                Calendario
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/">
+                <i class="bi bi-person-lock"></i>
+                Admin
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
 
-    <div class="container mt-5">{% block content %} {% endblock %}</div>
+    <!-- CONTENUTO -->
+
+    <div class="container main-container">
+      {% block content %} {% endblock %}
+    </div>
+
+    <!-- FOOTER -->
+
+    <footer class="text-center">
+      <div class="container">
+        <small> Noleggio Auto MediLife© 2026 </small>
+      </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>

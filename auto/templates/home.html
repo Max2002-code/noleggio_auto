@@ -1,83 +1,121 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Noleggio Auto</title>
-</head>
+{% extends "base.html" %} {% block content %}
 
-<body>
+<div class="container py-4">
+  <!-- TITOLO -->
 
-<h1>Prenota la tua auto</h1>
+  <div class="text-center mb-5">
+    <h1 class="fw-bold">🚗 Prenota la tua Auto</h1>
 
+    <p class="text-muted fs-5">
+      Inserisci il periodo del noleggio e verifica i veicoli disponibili
+    </p>
+  </div>
 
-<form method="POST">
+  <!-- RICERCA -->
 
-{% csrf_token %}
+  <div class="card border-0 shadow-lg mb-5">
+    <div class="card-body p-5">
+      <h4 class="fw-bold mb-4">📅 Periodo noleggio</h4>
 
-<p>
-Ritiro:
-</p>
+      <form method="POST">
+        {% csrf_token %}
 
-<input 
-type="datetime-local" 
-name="ritiro"
-required>
+        <div class="row g-4">
+          <div class="col-md-5">
+            <label class="form-label fw-semibold"> Data e ora ritiro </label>
 
+            <input
+              type="datetime-local"
+              name="ritiro"
+              class="form-control form-control-lg"
+              required
+            />
+          </div>
 
-<p>
-Riconsegna:
-</p>
+          <div class="col-md-5">
+            <label class="form-label fw-semibold">
+              Data e ora riconsegna
+            </label>
 
-<input 
-type="datetime-local" 
-name="riconsegna"
-required>
+            <input
+              type="datetime-local"
+              name="riconsegna"
+              class="form-control form-control-lg"
+              required
+            />
+          </div>
 
+          <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-primary btn-lg w-100">Cerca</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 
-<br><br>
+  <!-- RISULTATI -->
 
-<button type="submit">
-Cerca auto disponibili
-</button>
+  <h2 class="fw-bold mb-4">🚘 Auto disponibili</h2>
 
-</form>
+  <div class="row g-4">
+    {% for macchina in auto %}
 
+    <div class="col-md-4">
+      <div class="card border-0 shadow h-100 car-card">
+        <div class="card-body p-4">
+          <h3 class="fw-bold">{{ macchina.marca }} {{ macchina.modello }}</h3>
 
-<hr>
+          <hr />
 
+          <p>
+            📆 Anno:
 
-<h2>Auto disponibili</h2>
+            <b>{{ macchina.anno }}</b>
+          </p>
 
+          <p>
+            🔖 Targa:
 
-{% for macchina in auto %}
+            <b>{{ macchina.targa }}</b>
+          </p>
 
-<div>
+          <div class="alert alert-success rounded-pill text-center">
+            🟢 Disponibile
+          </div>
+        </div>
+      </div>
+    </div>
 
-<h3>
-{{ macchina.marca }}
-{{ macchina.modello }}
-</h3>
+    {% empty %}
 
-<p>
-Anno: {{ macchina.anno }}
-</p>
+    <div class="col-12">
+      <div class="alert alert-info shadow-sm">
+        Inserisci le date per vedere le auto disponibili.
+      </div>
+    </div>
 
-<p>
-Targa: {{ macchina.targa }}
-</p>
-
-
+    {% endfor %}
+  </div>
 </div>
 
-<hr>
+<style>
+  .car-card {
+    border-radius: 20px;
 
-{% empty %}
+    transition: 0.3s;
+  }
 
-<p>
-Inserisci le date per vedere le auto disponibili.
-</p>
+  .car-card:hover {
+    transform: translateY(-6px);
+  }
 
-{% endfor %}
+  .form-control {
+    border-radius: 14px;
+  }
 
+  .btn {
+    border-radius: 14px;
+  }
+</style>
 
-</body>
-</html>
+{% endblock %} ```

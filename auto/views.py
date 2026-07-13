@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.utils.dateparse import parse_datetime
-from .models import Auto, Prenotazione
+from .models import Auto, Prenotazione,Cliente
 from django.shortcuts import get_object_or_404, redirect
 from django.core.mail import send_mail
 from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+
 
 def catalogo(request):
 
@@ -60,17 +61,20 @@ def prenota(request, id_auto):
         id=id_auto
     )
 
+    clienti = Cliente.objects.all()
+
     errore = None
 
 
     if request.method == "POST":
 
-        nome = request.POST["nome"]
-        cognome = request.POST["cognome"]
-        email = request.POST["email"]
-        telefono = request.POST["telefono"]
-        patente = request.POST["patente"]
-        documento = request.POST["documento"]
+        cliente_id = request.POST["cliente"]
+
+        cliente = get_object_or_404(
+            Cliente,
+            id=cliente_id
+        )
+
 
         ritiro = request.POST["ritiro"]
         riconsegna = request.POST["riconsegna"]
@@ -85,55 +89,18 @@ def prenota(request, id_auto):
 
         if occupata:
 
-            errore = "Questa auto è già prenotata in queste date."
-
+            errore = "Questa auto è già prenotata."
 
         else:
 
             Prenotazione.objects.create(
-
-                nome=nome,
-                cognome=cognome,
-                email=email,
-                telefono=telefono,
-                patente=patente,
-                documento=documento,
-
+                cliente=cliente,
                 auto=auto,
-
                 ritiro=ritiro,
                 riconsegna=riconsegna
             )
 
-        send_mail(
-
-    "Conferma prenotazione auto",
-
-    f"""
-Gentile {nome} {cognome},
-
-la tua prenotazione è stata confermata.
-
-AUTO:
-{auto.marca} {auto.modello}
-
-Ritiro:
-{ritiro}
-
-Riconsegna:
-{riconsegna}
-
-
-Grazie per aver scelto il nostro servizio.
-""",
-
-    "noreply@noleggioauto.it",
-
-         [email],
-
-)   
-
-        return redirect("/")
+            return redirect("/")
 
 
     return render(
@@ -141,6 +108,7 @@ Grazie per aver scelto il nostro servizio.
         "prenota.html",
         {
             "auto": auto,
+            "clienti": clienti,
             "errore": errore
         }
     )
@@ -150,9 +118,11 @@ def calendario(request):
 
     oggi = date.today()
 
+    # calendario dei prossimi 365 giorni
     giorni = []
 
-    for i in range(30):
+    for i in range(365):
+
         giorni.append(
             oggi + timedelta(days=i)
         )
@@ -166,13 +136,14 @@ def calendario(request):
 
     for macchina in auto:
 
+
         giorni_auto = []
 
 
         for giorno in giorni:
 
 
-            prenotazione = Prenotazione.objects.filter(
+            prenotazioni = Prenotazione.objects.filter(
 
                 auto=macchina,
 
@@ -180,24 +151,79 @@ def calendario(request):
 
                 riconsegna__date__gte=giorno
 
-            ).first()
+            ).order_by(
+                "ritiro"
+            )
+
+
+            fasce = []
+
+
+            for prenotazione in prenotazioni:
+
+
+                fasce.append({
+
+                    "id":
+                    prenotazione.id,
+
+
+                    "ritiro":
+                    prenotazione.ritiro.strftime(
+                        "%d/%m/%Y %H:%M"
+                    ),
+
+
+                    "riconsegna":
+                    prenotazione.riconsegna.strftime(
+                        "%d/%m/%Y %H:%M"
+                    ),
+
+
+                    "cliente":
+                        prenotazione.cliente.nome + " " + prenotazione.cliente.cognome,
+
+
+                    "telefono":
+                        prenotazione.cliente.telefono,
+
+
+                    "email":
+                        prenotazione.cliente.email,
+
+
+                    "patente":
+                        prenotazione.cliente.patente,
+
+
+                    "documento":
+                        prenotazione.cliente.documento
+
+                })
 
 
 
             giorni_auto.append({
 
-                "giorno": giorno,
+                "giorno":
+                giorno,
 
-                "prenotazione": prenotazione
+
+                "fasce":
+                fasce
 
             })
 
 
+
         calendario.append({
 
-            "auto": macchina,
+            "auto":
+            macchina,
 
-            "giorni": giorni_auto
+
+            "giorni":
+            giorni_auto
 
         })
 
@@ -211,66 +237,67 @@ def calendario(request):
 
         {
 
-            "giorni": giorni,
+            "giorni":
+            giorni,
 
-            "calendario": calendario
+
+            "calendario":
+            calendario
 
         }
 
     )
 
-def calendario_eventi(request):
+@login_required
+def api_calendario(request):
+
+    prenotazioni = Prenotazione.objects.all()
 
     eventi = []
-
-    prenotazioni = Prenotazione.objects.select_related(
-        "auto"
-    ).all()
-
-
-    colori = {}
 
 
     for p in prenotazioni:
 
-        if p.auto.id not in colori:
-            colori[p.auto.id] = "#" + ("%06x" % (
-                0x100000 + p.auto.id * 123456
-            ))[1:]
-
-
         eventi.append({
 
             "title": (
-                f"{p.auto.marca} {p.auto.modello}"
+                f"🚗 {p.auto.marca} {p.auto.modello} "
+                f"- {p.cliente.nome} {p.cliente.cognome}"
             ),
+
 
             "start": p.ritiro.isoformat(),
 
             "end": p.riconsegna.isoformat(),
 
-            "backgroundColor":
-                colori[p.auto.id],
 
-            "borderColor":
-                colori[p.auto.id],
+            "color": "#dc3545",
+
 
             "extendedProps": {
 
+                "auto":
+                f"{p.auto.marca} {p.auto.modello}",
+
+
                 "cliente":
-                    f"{p.nome} {p.cognome}",
+                f"{p.cliente.nome} {p.cliente.cognome}",
+
 
                 "telefono":
-                    p.telefono,
+                p.cliente.telefono,
+
 
                 "email":
-                    p.email,
+                p.cliente.email,
+
 
                 "patente":
-                    p.patente,
+                p.cliente.patente,
+
 
                 "documento":
-                    p.documento
+                p.cliente.documento
 
             }
 
