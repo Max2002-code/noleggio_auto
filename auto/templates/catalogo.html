@@ -1,0 +1,82 @@
+{% extends "base.html" %} {% block content %}
+
+<h1 class="mb-4">Catalogo Automobili</h1>
+
+<div class="card shadow mb-4">
+  <div class="card-body">
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="row">
+        <div class="col-md-5">
+          <label class="form-label"> Ritiro </label>
+
+          <input
+            class="form-control"
+            type="datetime-local"
+            name="ritiro"
+            required
+          />
+        </div>
+
+        <div class="col-md-5">
+          <label class="form-label"> Riconsegna </label>
+
+          <input
+            class="form-control"
+            type="datetime-local"
+            name="riconsegna"
+            required
+          />
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+          <button class="btn btn-primary w-100">Cerca</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  {% for elemento in auto %}
+
+  <div class="col-md-4 mb-4">
+    <div class="card shadow h-100">
+      {% if elemento.auto.immagine %}
+
+      <img src="{{ elemento.auto.immagine.url }}" class="card-img-top" />
+
+      {% endif %}
+
+      <div class="card-body">
+        <h4>{{ elemento.auto.marca }} {{ elemento.auto.modello }}</h4>
+
+        <p>Anno: {{ elemento.auto.anno }}</p>
+
+        <p>Targa: {{ elemento.auto.targa }}</p>
+
+        {% if elemento.occupata %}
+
+        <div class="alert alert-danger">🔴 Occupata</div>
+
+        {% else %}
+
+        <div class="alert alert-success">🟢 Disponibile</div>
+
+        <a
+          href="/prenota/{{ elemento.auto.id }}/"
+          class="btn btn-success w-100"
+        >
+          Prenota
+        </a>
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+
+{% endblock %}

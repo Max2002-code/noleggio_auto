@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card shadow">
+    <div class="card-body">
+
+        <h2>
+            Prenota {{ auto.marca }} {{ auto.modello }}
+        </h2>
+
+
+        {% if errore %}
+
+        <div class="alert alert-danger">
+            {{ errore }}
+        </div>
+
+        {% endif %}
+
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Nome
+                </label>
+
+                <input 
+                class="form-control"
+                name="nome"
+                required>
+            </div>
+
+
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Cognome
+                </label>
+
+                <input 
+                class="form-control"
+                name="cognome"
+                required>
+            </div>
+
+
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input 
+                class="form-control"
+                type="email"
+                name="email"
+                required>
+            </div>
+
+
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Telefono
+                </label>
+
+                <input 
+                class="form-control"
+                name="telefono"
+                required>
+            </div>
+
+
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Numero patente
+                </label>
+
+                <input 
+                class="form-control"
+                name="patente"
+                required>
+            </div>
+
+
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Documento
+                </label>
+
+                <input 
+                class="form-control"
+                name="documento"
+                required>
+            </div>
+
+
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Ritiro
+                </label>
+
+                <input
+                class="form-control"
+                type="datetime-local"
+                name="ritiro"
+                required>
+            </div>
+
+
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Riconsegna
+                </label>
+
+                <input
+                class="form-control"
+                type="datetime-local"
+                name="riconsegna"
+                required>
+            </div>
+
+
+
+            <button class="btn btn-primary">
+                Conferma prenotazione
+            </button>
+
+
+        </form>
+
+
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Noleggio Auto</title>
+</head>
+
+<body>
+
+<h1>Prenota la tua auto</h1>
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+<p>
+Ritiro:
+</p>
+
+<input 
+type="datetime-local" 
+name="ritiro"
+required>
+
+
+<p>
+Riconsegna:
+</p>
+
+<input 
+type="datetime-local" 
+name="riconsegna"
+required>
+
+
+<br><br>
+
+<button type="submit">
+Cerca auto disponibili
+</button>
+
+</form>
+
+
+<hr>
+
+
+<h2>Auto disponibili</h2>
+
+
+{% for macchina in auto %}
+
+<div>
+
+<h3>
+{{ macchina.marca }}
+{{ macchina.modello }}
+</h3>
+
+<p>
+Anno: {{ macchina.anno }}
+</p>
+
+<p>
+Targa: {{ macchina.targa }}
+</p>
+
+
+</div>
+
+<hr>
+
+{% empty %}
+
+<p>
+Inserisci le date per vedere le auto disponibili.
+</p>
+
+{% endfor %}
+
+
+</body>
+</html>
