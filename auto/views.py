@@ -15,7 +15,9 @@ def catalogo(request):
     ritiro = None
     riconsegna = None
 
+
     if request.method == "POST":
+
         ritiro = parse_datetime(
             request.POST["ritiro"]
         )
@@ -27,22 +29,32 @@ def catalogo(request):
 
     lista_auto = []
 
+
     for macchina in auto:
 
         occupata = False
 
+
         if ritiro and riconsegna:
 
             occupata = Prenotazione.objects.filter(
+
                 auto=macchina,
+
                 ritiro__lt=riconsegna,
+
                 riconsegna__gt=ritiro
+
             ).exists()
 
 
+
         lista_auto.append({
+
             "auto": macchina,
+
             "occupata": occupata
+
         })
 
 
@@ -53,7 +65,6 @@ def catalogo(request):
             "auto": lista_auto
         }
     )
-
 def prenota(request, id_auto):
 
     auto = get_object_or_404(
@@ -185,19 +196,19 @@ def calendario(request):
 
 
                     "telefono":
-                        prenotazione.cliente.telefono,
+                    prenotazione.cliente.telefono,
 
 
                     "email":
-                        prenotazione.cliente.email,
+                    prenotazione.cliente.email,
 
 
                     "patente":
-                        prenotazione.cliente.patente,
+                    prenotazione.cliente.patente,
 
 
                     "documento":
-                        prenotazione.cliente.documento
+                    prenotazione.cliente.documento
 
                 })
 
@@ -260,18 +271,20 @@ def api_calendario(request):
 
         eventi.append({
 
-            "title": (
-                f"🚗 {p.auto.marca} {p.auto.modello} "
-                f"- {p.cliente.nome} {p.cliente.cognome}"
-            ),
+            "title":
+            f"🚗 {p.auto.marca} {p.auto.modello} - {p.cliente.nome} {p.cliente.cognome}",
 
 
-            "start": p.ritiro.isoformat(),
+            "start":
+            p.ritiro.isoformat(),
 
-            "end": p.riconsegna.isoformat(),
+
+            "end":
+            p.riconsegna.isoformat(),
 
 
-            "color": "#dc3545",
+            "color":
+            "#dc3545",
 
 
             "extendedProps": {
