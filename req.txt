@@ -8,12 +8,6 @@ pillow==12.3.0
 proxy_tools==0.1.0
 pyinstaller==6.21.0
 pyinstaller-hooks-contrib==2026.6
-pyobjc-core==12.2.1
-pyobjc-framework-Cocoa==12.2.1
-pyobjc-framework-Quartz==12.2.1
-pyobjc-framework-Security==12.2.1
-pyobjc-framework-UniformTypeIdentifiers==12.2.1
-pyobjc-framework-WebKit==12.2.1
 pywebview==6.2.1
 setuptools==83.0.0
 sqlparse==0.5.5
