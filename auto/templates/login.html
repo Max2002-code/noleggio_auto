@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Accesso Gestionale</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        min-height: 100vh;
+
+        background-image: url("/media/auto/WhatsApp Image 2025-12-03 at 10.27.35.jpeg");
+
+        background-size: cover;
+
+        background-position: center;
+
+        background-repeat: no-repeat;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        font-family: "Segoe UI", sans-serif;
+
+        position: relative;
+      }
+
+      body::before {
+        content: "";
+
+        position: fixed;
+
+        inset: 0;
+
+        background: rgba(0, 0, 0, 0.45);
+      }
+
+      .login-card {
+        width: 420px;
+
+        border-radius: 25px;
+
+        background: rgba(255, 255, 255, 0.95);
+
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+
+        position: relative;
+
+        z-index: 1;
+      }
+
+      .login-title {
+        font-size: 32px;
+
+        font-weight: 700;
+      }
+
+      .login-subtitle {
+        color: #6c757d;
+
+        font-size: 16px;
+      }
+
+      .form-label {
+        font-weight: 600;
+      }
+
+      .form-control {
+        border-radius: 14px;
+
+        padding: 14px 16px;
+
+        border: 1px solid #ddd;
+      }
+
+      .form-control:focus {
+        border-color: #0d6efd;
+
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+      }
+
+      .btn-login {
+        border-radius: 14px;
+
+        padding: 14px;
+
+        font-size: 18px;
+
+        font-weight: 600;
+
+        background: #0d6efd;
+
+        border: none;
+
+        transition: 0.3s;
+      }
+
+      .btn-login:hover {
+        background: #084298;
+
+        transform: translateY(-2px);
+      }
+
+      .brand-line {
+        width: 60px;
+
+        height: 4px;
+
+        background: #0d6efd;
+
+        border-radius: 20px;
+
+        margin: 15px auto 25px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card login-card border-0">
+      <div class="card-body p-5">
+        <div class="text-center mb-4">
+          <h1 class="login-title">Accesso Gestionale</h1>
+
+          <div class="brand-line"></div>
+
+          <p class="login-subtitle">Noleggio Auto MediLife</p>
+        </div>
+
+        {% if form.errors %}
+
+        <div class="alert alert-danger rounded-pill text-center">
+          Username o password errati
+        </div>
+
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-4">
+            <label class="form-label"> Username </label>
+
+            <input
+              type="text"
+              name="username"
+              class="form-control form-control-lg"
+              placeholder="Inserisci username"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label"> Password </label>
+
+            <input
+              type="password"
+              name="password"
+              class="form-control form-control-lg"
+              placeholder="Inserisci password"
+              required
+            />
+          </div>
+
+          <button class="btn btn-login btn-lg w-100 text-white">
+            Entra nel gestionale
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

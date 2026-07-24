@@ -1,124 +1,136 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="container">
-  <!-- HEADER -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h1 class="fw-bold">🚗 Catalogo Automobili</h1>
+<!-- HEADER -->
 
-      <p class="text-muted">Cerca la disponibilità e prenota il veicolo</p>
-    </div>
-  </div>
+<div class="mb-5">
+  <h1 class="fw-bold">Catalogo Automobili</h1>
 
-  <!-- RICERCA DISPONIBILITA -->
-  <div class="card border-0 shadow-lg mb-5">
-    <div class="card-body p-4">
-      <h5 class="mb-4 fw-bold">🔎 Verifica disponibilità</h5>
+  <p class="text-muted">Cerca la disponibilità e prenota il veicolo</p>
+</div>
 
-      <form method="POST">
-        {% csrf_token %}
+<!-- RICERCA DISPONIBILITA -->
 
-        <div class="row g-3">
-          <div class="col-md-5">
-            <label class="form-label fw-semibold"> 📅 Ritiro </label>
+<div class="card border-0 shadow-lg mb-5 search-card">
+  <div class="card-body p-4">
+    <h5 class="mb-4 fw-bold">🔎 Verifica disponibilità</h5>
 
-            <input
-              class="form-control form-control-lg"
-              type="datetime-local"
-              name="ritiro"
-              required
-            />
-          </div>
+    <form method="POST">
+      {% csrf_token %}
 
-          <div class="col-md-5">
-            <label class="form-label fw-semibold"> 📅 Riconsegna </label>
+      <div class="row g-3">
+        <div class="col-md-5">
+          <label class="form-label fw-semibold"> 📅 Ritiro </label>
 
-            <input
-              class="form-control form-control-lg"
-              type="datetime-local"
-              name="riconsegna"
-              required
-            />
-          </div>
-
-          <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-primary btn-lg w-100">Cerca</button>
-          </div>
+          <input
+            class="form-control form-control-lg"
+            type="datetime-local"
+            name="ritiro"
+            required
+          />
         </div>
-      </form>
-    </div>
-  </div>
 
-  <!-- AUTO -->
+        <div class="col-md-5">
+          <label class="form-label fw-semibold"> 📅 Riconsegna </label>
 
-  <div class="row g-4">
-    {% for elemento in auto %}
+          <input
+            class="form-control form-control-lg"
+            type="datetime-local"
+            name="riconsegna"
+            required
+          />
+        </div>
 
-    <div class="col-xl-4 col-lg-6">
-      <div class="card automobile-card border-0 shadow h-100">
-        {% if elemento.auto.immagine %}
-
-        <img
-          src="{{ elemento.auto.immagine.url }}"
-          class="card-img-top auto-image"
-        />
-
-        {% else %}
-
-        <div class="bg-light text-center p-5">🚗</div>
-
-        {% endif %}
-
-        <div class="card-body p-4">
-          <h3 class="fw-bold">
-            {{ elemento.auto.marca }} {{ elemento.auto.modello }}
-          </h3>
-
-          <div class="mt-3">
-            <p class="mb-2">
-              📆 Anno:
-              <b>{{ elemento.auto.anno }}</b>
-            </p>
-
-            <p class="mb-3">
-              🔖 Targa:
-              <b>{{ elemento.auto.targa }}</b>
-            </p>
-          </div>
-
-          {% if elemento.occupata %}
-
-          <div class="alert alert-danger rounded-pill text-center">
-            🔴 Auto occupata
-          </div>
-
-          <button class="btn btn-secondary btn-lg w-100 rounded-pill" disabled>
-            Non disponibile
-          </button>
-
-          {% else %}
-
-          <div class="alert alert-success rounded-pill text-center">
-            🟢 Disponibile
-          </div>
-
-          <a
-            href="/prenota/{{ elemento.auto.id }}/"
-            class="btn btn-success btn-lg w-100 rounded-pill"
-          >
-            Prenota ora 🚘
-          </a>
-
-          {% endif %}
+        <div class="col-md-2 d-flex align-items-end">
+          <button class="btn btn-primary btn-lg w-100">🔍 Cerca</button>
         </div>
       </div>
-    </div>
-
-    {% endfor %}
+    </form>
   </div>
 </div>
 
+<!-- AUTO -->
+
+<div class="row g-4">
+  {% for elemento in auto %}
+
+  <div class="col-xl-4 col-lg-6">
+    <div class="card automobile-card border-0 shadow h-100">
+      {% if elemento.auto.immagine %}
+
+      <img
+        src="{{ elemento.auto.immagine.url }}"
+        class="card-img-top auto-image"
+      />
+
+      {% else %}
+
+      <div class="bg-light text-center p-5 fs-1">🚗</div>
+
+      {% endif %}
+
+      <div class="card-body p-4">
+        <h3 class="fw-bold">
+          {{ elemento.auto.marca }} {{ elemento.auto.modello }}
+        </h3>
+
+        <div class="mt-3">
+          <p class="mb-2">
+            📆 Anno:
+
+            <b> {{ elemento.auto.anno }} </b>
+          </p>
+
+          <p class="mb-3">
+            🔖 Targa:
+
+            <b> {{ elemento.auto.targa }} </b>
+          </p>
+        </div>
+
+        {% if elemento.occupata %}
+
+        <div class="alert alert-danger rounded-pill text-center">
+          🔴 Auto occupata
+        </div>
+
+        <button class="btn btn-secondary btn-lg w-100" disabled>
+          Non disponibile
+        </button>
+
+        {% else %}
+
+        <div class="alert alert-success rounded-pill text-center">
+          🟢 Disponibile
+        </div>
+
+        <a
+          href="{% url 'prenota' elemento.auto.id %}"
+          class="btn btn-success btn-lg w-100"
+        >
+          Prenota ora 
+        </a>
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% empty %}
+
+  <div class="col-12">
+    <div class="alert alert-info text-center shadow-sm p-4">
+      Nessuna automobile disponibile.
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+
 <style>
+  .search-card {
+    border-radius: 25px;
+  }
+
   .automobile-card {
     transition: 0.3s;
 
@@ -148,4 +160,4 @@
   }
 </style>
 
-{% endblock %} ```
+{% endblock %}

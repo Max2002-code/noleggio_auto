@@ -7,8 +7,10 @@ from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-
+@login_required
 def catalogo(request):
+
+    print(request.user, request.user.is_authenticated)
 
     auto = Auto.objects.all()
 
@@ -65,6 +67,8 @@ def catalogo(request):
             "auto": lista_auto
         }
     )
+
+@login_required
 def prenota(request, id_auto):
 
     auto = get_object_or_404(

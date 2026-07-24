@@ -94,10 +94,17 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="/admin/">
-                <i class="bi bi-person-lock"></i>
-                Admin
-              </a>
+              <form method="post" action="{% url 'logout' %}" class="d-inline">
+                {% csrf_token %}
+
+                <button
+                  type="submit"
+                  class="nav-link btn btn-link text-decoration-none"
+                >
+                  <i class="bi bi-box-arrow-right"></i>
+                  Logout
+                </button>
+              </form>
             </li>
           </ul>
         </div>

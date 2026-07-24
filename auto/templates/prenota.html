@@ -1,111 +1,97 @@
 {% extends "base.html" %} {% block content %}
+<!-- AUTO SELEZIONATA -->
 
-<div class="container py-4">
-  <!-- AUTO SELEZIONATA -->
+<div class="card border-0 shadow-lg mb-4 overflow-hidden">
+  <div class="row g-0">
+    <div class="col-md-4">
+      {% if auto.immagine %}
 
-  <div class="card border-0 shadow-lg mb-4 overflow-hidden">
-    <div class="row g-0">
-      <div class="col-md-4">
-        {% if auto.immagine %}
+      <img src="{{ auto.immagine.url }}" class="w-100 h-100 car-image" />
 
-        <img src="{{ auto.immagine.url }}" class="w-100 h-100 car-image" />
+      {% else %}
 
-        {% else %}
+      <div class="no-image">🚗</div>
 
-        <div class="no-image">🚗</div>
+      {% endif %}
+    </div>
 
-        {% endif %}
-      </div>
+    <div class="col-md-8">
+      <div class="card-body p-4">
+        <h1 class="fw-bold">{{ auto.marca }} {{ auto.modello }}</h1>
 
-      <div class="col-md-8">
-        <div class="card-body p-4">
-          <h1 class="fw-bold">{{ auto.marca }} {{ auto.modello }}</h1>
+        <p class="text-muted fs-5">Prenotazione veicolo</p>
 
-          <p class="text-muted fs-5">Prenotazione veicolo</p>
-
-          <span class="badge bg-success rounded-pill px-4 py-2">
-            🟢 Disponibile
-          </span>
-        </div>
+        <span class="badge bg-success rounded-pill px-4 py-2">
+          🟢 Disponibile
+        </span>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ERRORE -->
+{% if errore %}
 
-  {% if errore %}
+<div class="alert alert-danger shadow">⚠️ {{ errore }}</div>
 
-  <div class="alert alert-danger shadow">⚠️ {{ errore }}</div>
+{% endif %}
 
-  {% endif %}
+<div class="card border-0 shadow-lg">
+  <div class="card-body p-4">
+    <h3 class="mb-4">Dati prenotazione</h3>
 
-  <!-- FORM PRENOTAZIONE -->
+    <form method="POST">
+      {% csrf_token %}
 
-  <div class="card border-0 shadow-lg">
-    <div class="card-body p-4">
-      <h3 class="mb-4">Dati prenotazione</h3>
+      <div class="mb-4">
+        <label class="form-label fw-bold"> Cliente </label>
 
-      <form method="POST">
-        {% csrf_token %}
+        <select class="form-select" name="cliente" required>
+          <option value="">Seleziona cliente</option>
 
-        <!-- CLIENTE -->
+          {% for cliente in clienti %}
 
-        <div class="mb-4">
-          <label class="form-label fw-bold"> Cliente </label>
+          <option value="{{ cliente.id }}">
+            {{ cliente.nome }} {{ cliente.cognome }} - {{ cliente.email }}
+          </option>
 
-          <select class="form-select" name="cliente" required>
-            <option value="">Seleziona cliente</option>
+          {% endfor %}
+        </select>
 
-            {% for cliente in clienti %}
+        <div class="form-text">Il cliente deve essere già registrato.</div>
+      </div>
 
-            <option value="{{ cliente.id }}">
-              {{ cliente.nome }} {{ cliente.cognome }} - {{ cliente.email }}
-            </option>
+      <div class="mb-4">
+        <label class="form-label fw-bold"> Ritiro </label>
 
-            {% endfor %}
-          </select>
+        <input
+          class="form-control"
+          type="datetime-local"
+          name="ritiro"
+          required
+        />
+      </div>
 
-          <div class="form-text">Il cliente deve essere già registrato.</div>
-        </div>
+      <div class="mb-4">
+        <label class="form-label fw-bold"> Riconsegna </label>
 
-        <!-- RITIRO -->
+        <input
+          class="form-control"
+          type="datetime-local"
+          name="riconsegna"
+          required
+        />
+      </div>
 
-        <div class="mb-4">
-          <label class="form-label fw-bold"> Ritiro </label>
-
-          <input
-            class="form-control"
-            type="datetime-local"
-            name="ritiro"
-            required
-          />
-        </div>
-
-        <!-- RICONSEGNA -->
-
-        <div class="mb-4">
-          <label class="form-label fw-bold"> Riconsegna </label>
-
-          <input
-            class="form-control"
-            type="datetime-local"
-            name="riconsegna"
-            required
-          />
-        </div>
-
-        <button class="btn btn-success btn-lg w-100">
-          🚗 Conferma prenotazione
-        </button>
-      </form>
-    </div>
+      <button class="btn btn-success btn-lg w-100">
+        Conferma prenotazione
+      </button>
+    </form>
   </div>
 </div>
 
 <style>
   .car-image {
     object-fit: cover;
-
     min-height: 280px;
   }
 

@@ -1,19 +1,19 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="container py-4">
-  <!-- TITOLO -->
+<div class="py-4">
+  <!-- HEADER -->
 
-  <div class="text-center mb-5">
-    <h1 class="fw-bold">🚗 Prenota la tua Auto</h1>
+  <div class="mb-5">
+    <h1 class="fw-bold mb-1"> Gestione Noleggio Auto</h1>
 
-    <p class="text-muted fs-5">
-      Inserisci il periodo del noleggio e verifica i veicoli disponibili
+    <p class="text-muted mb-0">
+      Seleziona il periodo e verifica la disponibilità dei veicoli
     </p>
   </div>
 
-  <!-- RICERCA -->
+  <!-- RICERCA PERIODO -->
 
-  <div class="card border-0 shadow-lg mb-5">
+  <div class="card search-card border-0 shadow-lg mb-5">
     <div class="card-body p-5">
       <h4 class="fw-bold mb-4">📅 Periodo noleggio</h4>
 
@@ -46,7 +46,7 @@
           </div>
 
           <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-primary btn-lg w-100">Cerca</button>
+            <button class="btn btn-primary btn-lg w-100">🔍 Cerca</button>
           </div>
         </div>
       </form>
@@ -55,33 +55,53 @@
 
   <!-- RISULTATI -->
 
-  <h2 class="fw-bold mb-4">🚘 Auto disponibili</h2>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">🚘 Flotta disponibile</h2>
+
+    <span class="badge bg-dark px-4 py-2 rounded-pill">
+      {{ auto|length }} veicoli
+    </span>
+  </div>
 
   <div class="row g-4">
     {% for macchina in auto %}
 
     <div class="col-md-4">
-      <div class="card border-0 shadow h-100 car-card">
+      <div class="card car-card border-0 shadow h-100">
         <div class="card-body p-4">
-          <h3 class="fw-bold">{{ macchina.marca }} {{ macchina.modello }}</h3>
+          <div class="icon-car mb-3">🚗</div>
+
+          <h3 class="fw-bold">
+            {{ macchina.auto.marca }} {{ macchina.auto.modello }}
+          </h3>
 
           <hr />
 
-          <p>
-            📆 Anno:
+          <div class="info">
+            <p>
+              📆 Anno:
+              <strong> {{ macchina.auto.anno }} </strong>
+            </p>
 
-            <b>{{ macchina.anno }}</b>
-          </p>
+            <p>
+              🔖 Targa:
+              <strong> {{ macchina.auto.targa }} </strong>
+            </p>
+          </div>
 
-          <p>
-            🔖 Targa:
+          {% if macchina.occupata %}
 
-            <b>{{ macchina.targa }}</b>
-          </p>
+          <div class="alert alert-danger rounded-pill text-center mt-4 mb-0">
+            🔴 Non disponibile
+          </div>
 
-          <div class="alert alert-success rounded-pill text-center">
+          {% else %}
+
+          <div class="alert alert-success rounded-pill text-center mt-4 mb-0">
             🟢 Disponibile
           </div>
+
+          {% endif %}
         </div>
       </div>
     </div>
@@ -89,8 +109,8 @@
     {% empty %}
 
     <div class="col-12">
-      <div class="alert alert-info shadow-sm">
-        Inserisci le date per vedere le auto disponibili.
+      <div class="alert alert-info shadow-sm text-center p-4">
+        📅 Inserisci un periodo per vedere le auto disponibili.
       </div>
     </div>
 
@@ -99,23 +119,61 @@
 </div>
 
 <style>
-  .car-card {
-    border-radius: 20px;
+  .search-card {
+    border-radius: 25px;
+  }
 
-    transition: 0.3s;
+  .car-card {
+    border-radius: 25px;
+
+    transition: all 0.3s ease;
+
+    background: white;
   }
 
   .car-card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-8px);
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .icon-car {
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 50%;
+
+    background: #eef4ff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 30px;
   }
 
   .form-control {
-    border-radius: 14px;
+    border-radius: 15px;
+
+    border: 1px solid #ddd;
   }
 
   .btn {
-    border-radius: 14px;
+    border-radius: 15px;
+
+    font-weight: 600;
+  }
+
+  .badge {
+    font-size: 14px;
+  }
+
+  .info p {
+    font-size: 16px;
   }
 </style>
 
-{% endblock %} ```
+{% endblock %}

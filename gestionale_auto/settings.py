@@ -25,8 +25,12 @@ SECRET_KEY = 'django-insecure-r4=43d&t-(8ro@pn(jj@2^^0lsxl5yxx#k_j$(21f#pq&b+3z#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "www.medilifegroupspa.com",
+    "medilifegroupspa.com"
+]
 
 # Application definition
 
@@ -103,9 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'it-it'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Rome'
 
 USE_I18N = True
 
@@ -119,7 +123,9 @@ STATIC_URL = 'static/'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-LOGIN_URL = "/admin/login/"
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/login/"
 
 MEDIA_URL = "/media/"
 
